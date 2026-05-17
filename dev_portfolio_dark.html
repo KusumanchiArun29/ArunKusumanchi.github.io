@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Clash+Display:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c26;
+    --border: rgba(255,255,255,0.07);
+    --accent: #7f77dd;
+    --accent2: #5dcaa5;
+    --text: #f0eeff;
+    --muted: #8884aa;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Clash Display', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 14px; color: var(--accent); letter-spacing: 0.1em; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(127,119,221,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: var(--mono); font-size: 12px; color: var(--accent2);
+    letter-spacing: 0.15em; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent2); }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+  .hero-desc {
+    font-family: var(--mono); font-size: 13px; color: var(--muted);
+    max-width: 500px; line-height: 1.8; margin-bottom: 2.5rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    padding: 0.8rem 2rem; border-radius: 4px;
+    font-family: var(--mono); font-size: 13px;
+    text-decoration: none; letter-spacing: 0.05em;
+    transition: opacity 0.2s, transform 0.2s;
+    cursor: pointer; border: none;
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    padding: 0.8rem 2rem; border-radius: 4px;
+    font-family: var(--mono); font-size: 13px;
+    text-decoration: none; letter-spacing: 0.05em;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .btn-outline:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 3rem;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 0.5rem; letter-spacing: 0.1em;
+  }
+  .hero-scroll::after { content: ''; display: block; width: 40px; height: 1px; background: var(--muted); }
+
+  /* SECTIONS COMMON */
+  section { padding: 6rem 3rem; }
+  .section-label {
+    font-family: var(--mono); font-size: 11px; color: var(--accent2);
+    letter-spacing: 0.2em; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent2); }
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+  }
+
+  /* ABOUT */
+  #about { background: var(--surface); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .about-text p {
+    font-family: var(--mono); font-size: 13px; color: var(--muted);
+    line-height: 1.9; margin-bottom: 1rem;
+  }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .stat-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem;
+  }
+  .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.05em; }
+
+  /* SKILLS */
+  #skills { background: var(--bg); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  .skill-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .skill-icon { font-size: 28px; margin-bottom: 0.75rem; }
+  .skill-name { font-size: 15px; font-weight: 700; margin-bottom: 0.25rem; }
+  .skill-level { font-family: var(--mono); font-size: 11px; color: var(--accent2); letter-spacing: 0.05em; }
+  .skill-bar { margin-top: 0.75rem; height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .skill-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; }
+
+  /* SOFT SKILLS */
+  #soft-skills { background: var(--surface); }
+  .soft-skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+  .soft-skill-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem;
+    transition: border-color 0.2s, transform 0.2s;
+    text-align: left;
+  }
+  .soft-skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .soft-skill-icon { font-size: 40px; margin-bottom: 1rem; display: block; }
+  .soft-skill-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
+  .soft-skill-desc { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+  /* PROJECTS */
+  #projects { background: var(--surface); }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .project-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .project-card:hover::before { opacity: 1; }
+  .project-num { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 1rem; }
+  .project-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .project-desc { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 4px;
+    background: var(--surface2); color: var(--accent2); border: 1px solid rgba(93,202,165,0.2);
+  }
+  .project-links { display: flex; gap: 1rem; }
+  .project-links a {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    text-decoration: none; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 0.3rem;
+    transition: opacity 0.2s;
+  }
+  .project-links a:hover { opacity: 0.7; }
+
+  /* CONTACT */
+  #contact { background: var(--bg); text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-inner p { font-family: var(--mono); font-size: 13px; color: var(--muted); line-height: 1.9; margin-bottom: 2rem; }
+  .contact-email {
+    font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 800;
+    color: var(--accent); margin-bottom: 2rem; letter-spacing: -0.02em;
+  }
+  .social-links { display: flex; justify-content: center; gap: 1.5rem; }
+  .social-links a {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    text-decoration: none; letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .social-links a:hover { color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<!-- Scroll to Top Button -->
+<button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+  id="scrollBtn"
+  style="
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #7f77dd;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+    box-shadow: 0 4px 15px rgba(127,119,221,0.4);
+    transition: opacity 0.3s, transform 0.2s;
+  ">
+  ↑
+</button>
+
+<script>
+  const scrollBtn = document.getElementById('scrollBtn');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      scrollBtn.style.display = 'block';
+    } else {
+      scrollBtn.style.display = 'none';
+    }
+  });
+
+  scrollBtn.addEventListener('mouseover', () => {
+    scrollBtn.style.transform = 'translateY(-3px)';
+  });
+  scrollBtn.addEventListener('mouseout', () => {
+    scrollBtn.style.transform = 'translateY(0)';
+  });
+</script>
+<body>
+
+<nav>
+  <div class="nav-logo">ArunKusumanchi.dev</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#projects">projects</a>
+    <a href="#contact">contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-tag">Available for opportunities</div>
+  <h1>Arun<br/><span>Kusumanchi</span></h1>
+  <p class="hero-sub">Code & Data Curious </p>
+  <p class="hero-desc">
+    I write code, explore data, and stay curious about emerging technologies. Passionate about development and data science always learning, and building. Learning out loud building with code, exploring data, and growing every single day.
+  </p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="#projects">View My Work</a>
+    <a class="btn-outline" href="#contact">Get In Touch</a>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — about me</div>
+  <div class="section-title">Who I Am</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Hi! I'm a fresher developer who refuses to just be average. I'm into development and data science — not because it's trending, but because I genuinely love building things and finding patterns in data.</p>
+      <p>I'm looking for my first opportunity where I can contribute from day one, grow fast, and prove that freshers can deliver real value.</p>
+      <p>I'm not the most experienced person in the room — but I'm probably the most curious one.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">1+</div>
+        <div class="stat-label">project shipped</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">technologies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">commitment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">curiosity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 — skills</div>
+  <div class="section-title">What I Work With</div>
+  <div class="skills-grid">
+
+      <div class="skill-card">
+      <div class="skill-icon">🐍</div>
+      <div class="skill-name">Python</div>
+      <div class="skill-level">Intermediate</div>
+    </div>
+
+     <div class="skill-card">
+      <div class="skill-icon">🛢️</div>
+      <div class="skill-name">SQL</div>
+      <div class="skill-level">Basics</div>
+    </div>
+
+    
+    <div class="skill-card">
+      <div class="skill-icon">🌐</div>
+      <div class="skill-name">HTML & CSS</div>
+      <div class="skill-level">Familiar</div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-icon">🔧</div>
+      <div class="skill-name">Git & GitHub</div>
+      <div class="skill-level">Familiar</div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-icon">📊</div>
+      <div class="skill-name">PowerBI</div>
+      <div class="skill-level">Intermediate</div>
+    </div> 
+
+    <div class="skill-card">
+      <div class="skill-icon">⚡</div>
+      <div class="skill-name">JavaScript</div>
+      <div class="skill-level">Basic</div>
+     </div>
+   
+    
+    <div class="skill-card">
+      <div class="skill-icon">💡</div>
+      <div class="skill-name">Problem Solving</div>
+      <div class="skill-level">Developing</div>
+    </div>
+  </div>
+</section>
+
+<section id="soft-skills" style="padding: 6rem 3rem; background: var(--surface);">
+  <div class="section-label">03 — soft skills</div>
+  <div class="section-title">Beyond The Code</div>
+  <div class="soft-skills-grid">
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">🧠</div>
+      <div class="soft-skill-name">Critical Thinking</div>
+    </div>
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">📖</div>
+      <div class="soft-skill-name">Self Learning</div>
+      
+    </div>
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">💬</div>
+      <div class="soft-skill-name">Communication</div>
+     
+    </div>
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">🔍</div>
+      <div class="soft-skill-name">Curiosity</div>
+     
+    </div>
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">🔄</div>
+      <div class="soft-skill-name">Consistency</div>
+     
+    </div>
+
+    <div class="soft-skill-card">
+      <div class="soft-skill-icon">🌱</div>
+      <div class="soft-skill-name">Adaptability</div>
+      
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">04 — projects</div>
+  <div class="section-title">What I've Built</div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">project / 01</div>
+      <div class="project-title">Hospital-Operations-Resource-Utilization-Dashboard </div>
+      <div class="project-desc">Created an interactive dashboard and designed and developed an interactive Hospital Operations Dashboard using Power BI to analyze patient flow, bed utilization, and treatment costs across departments.</div>
+      <div class="project-tags">
+        <span class="tag">Microsoft Excel</span>
+        <span class="tag">Sql</span>
+        <span class="tag">Microsoft Power BI</span>
+        <span class="tag">Data Visualization</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/KusumanchiArun29/Hospital-Operations-Resource-Utilization-Dashboard/blob/main/Hospital%20Operations%20%26%20Resource%20Utilization%20Dashboard.pbix">↗ Live Demo</a>
+        <a href="https://github.com/KusumanchiArun29/Hospital-Operations-Resource-Utilization-Dashboard">⌥ GitHub</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">project / 02</div>
+      <div class="project-title">IPL 2024 Data Analytics Project</div>
+      <div class="project-desc">This is a team-based end‑to‑end Data Analytics project analyzing IPL 2024 match data. The project demonstrates how raw sports data can be transformed into meaningful insights and predictive analysis using SQL, Python, and Power BI.</div>
+      <div class="project-tags">
+        <span class="tag">Power BI Dashboard design </span>
+        <span class="tag">Data Cleaning</span>
+        <span class="tag">Data Visualization</span>
+        <span class="tag">DAX measures</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Trived7/IPL-Data-Analytics-Project/blob/main/IPL.pbix" target="_blank">↗ Live Demo</a>
+        <a href="https://github.com/Trived7/IPL-Data-Analytics-Project">⌥ GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label" style="justify-content:center;">05 — contact</div>
+  <div class="section-title" style="text-align:center;">Let's Work Together</div>
+  <div class="contact-inner">
+    <p>" Open to opportunities in development and data science " Drop me a message " I'd love to connect "
+    </p>
+    <div class="contact-email">Spkusumanchi@gmail.com</div>
+    <a class="btn-primary" href="mailto:spkusumanchi@gmail.com" style="display:inline-block; margin-bottom:2rem;">Send a Message</a>
+    <div class="social-links">
+      <a href="https://github.com/KusumanchiArun29">GitHub</a>
+      <a href="https://www.linkedin.com/in/arun-kusumanchi/">LinkedIn</a>
+      <a href="https://drive.google.com/file/d/1iIwd8RDoixQ17RvSL3TL6CmBVuard5ri/view?usp=sharing">Resume ↓</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Arun Kusumanchi — Built with HTML, CSS & JS</p>
+  <p style="color: var(--accent);">✦ Open to Work ✦</p>
+</footer>
+
+</body>
+</html>
